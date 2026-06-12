@@ -116,7 +116,7 @@ Cópialas, adáptalas a tu corpus, y sobre todo quédate con la pregunta que las
 - [llm-eval-contable](https://github.com/jleonceo/llm-eval-contable) — la misma filosofía
   (medir antes de confiar) aplicada a una skill: qué es una skill y cómo se examina.
 - [accounting-agent-swarm](https://github.com/jleonceo/accounting-agent-swarm) — el
-  sistema cuyo conocimiento gobierna este harness: 19 corridas medidas y las caídas explicadas.
+  sistema cuyo conocimiento gobierna este harness: 19 simulaciones medidas y las caídas explicadas.
 
 ---
 

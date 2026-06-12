@@ -1,0 +1,123 @@
+# agent-memory-governance
+
+Tres piezas pequeñas para que la memoria persistente de un agente de IA no se convierta
+en un vertedero. Salen de un sistema en uso real — unas 100 notas acumuladas en dos meses
+de trabajo diario con Claude Code — no de un diseño teórico.
+
+---
+
+## El problema, explicado desde cero
+
+Si trabajas a diario con un agente de IA, tarde o temprano querrás que **recuerde**: las
+decisiones que tomasteis, los errores que ya cometió una vez, las reglas de tu proyecto.
+La forma habitual de conseguirlo es darle memoria persistente: ficheros de texto que el
+agente lee al arrancar y va escribiendo mientras trabaja.
+
+Guardar es la parte fácil. Lo que casi nadie cuenta es que **esa memoria se pudre**, y se
+pudre de tres formas distintas:
+
+1. **Fontanería rota.** Notas que enlazan a notas que ya no existen, notas huérfanas que
+   nada referencia, índices que apuntan a ficheros borrados. El agente sigue el enlace y
+   encuentra el vacío.
+2. **Caducidad.** Cosas que fueron verdad y dejaron de serlo: la cifra de hace un mes, la
+   ruta que cambió, la decisión que se revirtió. La nota sigue ahí, escrita con la misma
+   seguridad que el primer día.
+3. **Falsedad consistente.** La peor: una nota bien escrita, bien enlazada, bien
+   formateada... y falsa. Pasa todos los chequeos de forma. Y el agente la consultará con
+   total confianza, porque la memoria propia no se cuestiona.
+
+El almacenamiento está resuelto — hay patrones públicos de sobra para *guardar* memoria
+de agente. Lo que no encontré en ningún sitio es la **gobernanza**: quién vigila lo
+guardado, cómo se detecta lo podrido, y qué entra y qué no. Esto es lo que construí.
+
+## Las tres piezas
+
+### 1. El linter — fontanería ([lint_corpus.py](lint_corpus.py))
+
+Un script de Python sin dependencias que revisa la estructura del corpus: wikilinks
+`[[...]]` que no resuelven, punteros del índice a ficheros que no existen, notas huérfanas,
+referencias de las skills a documentos ausentes, y marcas `STALE` (contenido señalado como
+sensible a quedarse obsoleto).
+
+```
+python lint_corpus.py --memory <dir_de_notas> [--rag <dir>] [--skills <dir>]
+```
+
+No juzga si el contenido es verdad — solo si la estructura se sostiene. Es deliberado:
+un chequeo barato que puedes correr cada día encuentra la podredumbre de tipo 1 antes
+de que el agente tropiece con ella.
+
+### 2. El log automático — rastro ([hooks/log_memoria.ps1](hooks/log_memoria.ps1))
+
+Un hook de Claude Code (PostToolUse) que añade una línea a un `log.md` append-only cada
+vez que el agente crea o modifica una nota. Fecha, operación, fichero, descripción.
+
+La clave no es el formato — es que **no depende de la disciplina de nadie**. Ni del humano
+ni del agente: dispara solo, en cada escritura. Cuando algo aparece mal en la memoria,
+el log te dice cuándo entró y qué decía. Sin rastro, una nota corrupta es un misterio;
+con rastro, es un diff.
+
+### 3. Las citas — origen ([docs/convencion_citations.md](docs/convencion_citations.md))
+
+Una convención: cada nota termina diciendo **quién la verificó, contra qué fuente, y si
+la comprobación se puede re-ejecutar hoy**. Una nota re-ejecutable se defiende sola; una
+sin fuente depende de la fe. El documento explica el formato y el porqué, con ejemplo real.
+
+## Lo que estas piezas NO cazan — y conviene decirlo claro
+
+El lint caza **inconsistencia**, no **falsedad consistente**. Una mentira bien formateada
+pasa el lint, queda logueada con su fecha y hasta puede llevar un bloque de citas impecable.
+
+Las tres piezas resuelven la podredumbre de tipo 1, acotan la de tipo 2 (marcas STALE +
+citas con fecha) y dejan la de tipo 3 señalada pero no resuelta. Para cazar una falsedad
+consistente hace falta algo más caro: **verificar la afirmación contra la fuente primaria
+de su dominio** — ejecutar la query, leer el fichero, correr el test. Eso es la cuarta
+pieza. Y la cuarta pieza está congelada a propósito.
+
+## La cuarta pieza — y por qué está congelada
+
+El diseño existe: un **árbitro de admisión** con interfaz genérica —
+`dominio + afirmación + evidencia → ADMITIR / RECHAZAR / ADMITIR_DEGRADADO + razón` —
+enchufable por dominio. En mi caso, el dominio contable verificaría contra MySQL; otros
+dominios enchufarían su propia fuente de verdad.
+
+Lo congelé antes de construirlo. Al revisar el camino completo encontré dos cosas:
+
+1. De ~100 notas del corpus real, solo 15-20 tenían riesgo real de admisión — el problema
+   que el árbitro ataca es más pequeño de lo que parecía desde dentro.
+2. El problema **original** — que la información correcta *llegue* al agente en el momento
+   de necesidad (recuperación) — seguía sin tocar. Estaba a punto de construir la cuarta
+   pieza de admisión teniendo cero piezas de recuperación.
+
+Construir el árbitro habría sido seguir por inercia: el siguiente paso del plan, no el
+siguiente paso del problema. La regla que me apliqué es la misma que gobierna las notas:
+**la gobernanza también se aplica al roadmap**. Se descongela el día que haya evidencia
+de que el método manual (verificar al usar, no al guardar) no basta.
+
+## De dónde sale esto
+
+Del proyecto TechAcces: una empresa ficticia con contabilidad real (~17.000 líneas de
+diario en MySQL) sobre la que desarrollo enjambres de agentes Claude con evaluación
+continua. Dos meses de sesiones diarias generan mucha memoria — y los problemas de arriba
+no son hipotéticos: los tres tipos de podredumbre aparecieron de verdad.
+
+Una anécdota que resume el espíritu: en su primera pasada sobre el corpus real, el linter
+reportó dos problemas... que eran **fallos del propio linter** (no entendía referencias
+legítimas entre repositorios y marcaba como rotos los enlaces citados como ejemplo dentro
+de código). Se corrigió el linter, no el corpus. La herramienta de vigilancia también se
+vigila — nada se da por bueno sin verificar, tampoco el verificador.
+
+Esto no es un framework ni pretende serlo. Son tres piezas pequeñas y un criterio.
+Cópialas, adáptalas a tu corpus, y sobre todo quédate con la pregunta que las origina:
+*¿quién vigila lo que tu agente recuerda?*
+
+## Relación con otros proyectos
+
+- [llm-eval-contable](https://github.com/jleonceo/llm-eval-contable) — la misma filosofía
+  (medir antes de confiar) aplicada a una skill: qué es una skill y cómo se examina.
+- [accounting-agent-swarm](https://github.com/jleonceo/accounting-agent-swarm) — el
+  sistema cuyo conocimiento gobierna este harness: 19 corridas medidas y las caídas explicadas.
+
+---
+
+Construido por [Juan Luis León Rodríguez](https://juanluisleon.vercel.app) · junio 2026

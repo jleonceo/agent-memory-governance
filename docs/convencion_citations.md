@@ -44,12 +44,11 @@ aparezcan: están identificados y aceptados.
 ```
 
 La idea viene de observar cómo GitHub Copilot ancla sus respuestas a citas de código:
-la afirmación vale lo que vale su ancla. Aplicado a memoria de agente: una nota re-ejecutable
-se defiende sola; una sin fuente depende de la fe.
+la afirmación vale lo que vale su ancla.
 
 ## Qué NO resuelve
 
-La cita documenta la verificación — no la ejecuta. Una nota puede llevar un bloque de
+La cita documenta la verificación, no la ejecuta. Una nota puede llevar un bloque de
 cita perfectamente formateado y ser falsa (fuente mal citada, verificación que nunca
-ocurrió). El lint comprueba estructura, no veracidad. La veracidad solo la garantiza
-re-ejecutar la verificación contra la fuente — por eso el campo clave es `Re-ejecutable`.
+ocurrió). El lint comprueba la estructura; la veracidad solo la garantiza volver a
+ejecutar la comprobación contra la fuente. Por eso el campo clave es `Re-ejecutable`.

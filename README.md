@@ -1,8 +1,8 @@
 # agent-memory-governance
 
 Tres piezas pequeñas para que la memoria persistente de un agente de IA no se convierta
-en un vertedero. Salen de un sistema en uso real — unas 100 notas acumuladas en dos meses
-de trabajo diario con Claude Code — no de un diseño teórico.
+en un vertedero. Salen de un sistema en uso real: unas 100 notas acumuladas en dos meses
+de trabajo diario con Claude Code.
 
 ---
 
@@ -22,11 +22,11 @@ pudre de tres formas distintas:
 2. **Caducidad.** Cosas que fueron verdad y dejaron de serlo: la cifra de hace un mes, la
    ruta que cambió, la decisión que se revirtió. La nota sigue ahí, escrita con la misma
    seguridad que el primer día.
-3. **Falsedad consistente.** La peor: una nota bien escrita, bien enlazada, bien
-   formateada... y falsa. Pasa todos los chequeos de forma. Y el agente la consultará con
-   total confianza, porque la memoria propia no se cuestiona.
+3. **Falsedad consistente.** La peor: una nota bien escrita y bien enlazada... y falsa.
+   Pasa cualquier comprobación de forma, y el agente la consultará con total confianza,
+   porque la memoria propia no se cuestiona.
 
-El almacenamiento está resuelto — hay patrones públicos de sobra para *guardar* memoria
+El almacenamiento está resuelto: hay patrones públicos de sobra para *guardar* memoria
 de agente. Lo que no encontré en ningún sitio es la **gobernanza**: quién vigila lo
 guardado, cómo se detecta lo podrido, y qué entra y qué no. Esto es lo que construí.
 
@@ -43,19 +43,19 @@ sensible a quedarse obsoleto).
 python lint_corpus.py --memory <dir_de_notas> [--rag <dir>] [--skills <dir>]
 ```
 
-No juzga si el contenido es verdad — solo si la estructura se sostiene. Es deliberado:
-un chequeo barato que puedes correr cada día encuentra la podredumbre de tipo 1 antes
-de que el agente tropiece con ella.
+No juzga si el contenido es verdad, solo si la estructura se sostiene. Es deliberado:
+una comprobación barata que se puede ejecutar a diario encuentra la podredumbre de
+tipo 1 antes de que el agente tropiece con ella.
 
 ### 2. El log automático — rastro ([hooks/log_memoria.ps1](hooks/log_memoria.ps1))
 
 Un hook de Claude Code (PostToolUse) que añade una línea a un `log.md` append-only cada
 vez que el agente crea o modifica una nota. Fecha, operación, fichero, descripción.
 
-La clave no es el formato — es que **no depende de la disciplina de nadie**. Ni del humano
-ni del agente: dispara solo, en cada escritura. Cuando algo aparece mal en la memoria,
-el log te dice cuándo entró y qué decía. Sin rastro, una nota corrupta es un misterio;
-con rastro, es un diff.
+El formato importa poco. Lo que vale es que **no depende de la disciplina de nadie**, ni
+del humano ni del agente: se dispara solo en cada escritura. Cuando algo aparece mal en
+la memoria, el log te dice cuándo entró y qué decía. Sin rastro, una nota corrupta es un
+misterio; con rastro, es un diff.
 
 ### 3. Las citas — origen ([docs/convencion_citations.md](docs/convencion_citations.md))
 
@@ -63,30 +63,31 @@ Una convención: cada nota termina diciendo **quién la verificó, contra qué f
 la comprobación se puede re-ejecutar hoy**. Una nota re-ejecutable se defiende sola; una
 sin fuente depende de la fe. El documento explica el formato y el porqué, con ejemplo real.
 
-## Lo que estas piezas NO cazan — y conviene decirlo claro
+## Lo que estas piezas NO cazan (y conviene decirlo claro)
 
-El lint caza **inconsistencia**, no **falsedad consistente**. Una mentira bien formateada
-pasa el lint, queda logueada con su fecha y hasta puede llevar un bloque de citas impecable.
+El lint caza la inconsistencia, pero no la **falsedad consistente**: una mentira bien
+formateada pasa el lint, queda registrada con su fecha y hasta puede llevar un bloque
+de citas impecable.
 
 Las tres piezas resuelven la podredumbre de tipo 1, acotan la de tipo 2 (marcas STALE +
 citas con fecha) y dejan la de tipo 3 señalada pero no resuelta. Para cazar una falsedad
 consistente hace falta algo más caro: **verificar la afirmación contra la fuente primaria
-de su dominio** — ejecutar la query, leer el fichero, correr el test. Eso es la cuarta
-pieza. Y la cuarta pieza está congelada a propósito.
+de su dominio**, es decir, ejecutar la consulta o lanzar el test de nuevo. Eso es la
+cuarta pieza. Y la cuarta pieza está congelada a propósito.
 
 ## La cuarta pieza — y por qué está congelada
 
-El diseño existe: un **árbitro de admisión** con interfaz genérica —
-`dominio + afirmación + evidencia → ADMITIR / RECHAZAR / ADMITIR_DEGRADADO + razón` —
+El diseño existe: un **árbitro de admisión** con interfaz genérica
+(`dominio + afirmación + evidencia → ADMITIR / RECHAZAR / ADMITIR_DEGRADADO + razón`),
 enchufable por dominio. En mi caso, el dominio contable verificaría contra MySQL; otros
 dominios enchufarían su propia fuente de verdad.
 
 Lo congelé antes de construirlo. Al revisar el camino completo encontré dos cosas:
 
-1. De ~100 notas del corpus real, solo 15-20 tenían riesgo real de admisión — el problema
+1. De ~100 notas del corpus real, solo 15-20 tenían riesgo real de admisión. El problema
    que el árbitro ataca es más pequeño de lo que parecía desde dentro.
-2. El problema **original** — que la información correcta *llegue* al agente en el momento
-   de necesidad (recuperación) — seguía sin tocar. Estaba a punto de construir la cuarta
+2. El problema original (que la información correcta *llegue* al agente en el momento
+   de necesidad, la recuperación) seguía sin tocar. Estaba a punto de construir la cuarta
    pieza de admisión teniendo cero piezas de recuperación.
 
 Construir el árbitro habría sido seguir por inercia: el siguiente paso del plan, no el
@@ -98,18 +99,18 @@ de que el método manual (verificar al usar, no al guardar) no basta.
 
 Del proyecto TechAcces: una empresa ficticia con contabilidad real (~17.000 líneas de
 diario en MySQL) sobre la que desarrollo enjambres de agentes Claude con evaluación
-continua. Dos meses de sesiones diarias generan mucha memoria — y los problemas de arriba
+continua. Dos meses de sesiones diarias generan mucha memoria, y los problemas de arriba
 no son hipotéticos: los tres tipos de podredumbre aparecieron de verdad.
 
 Una anécdota que resume el espíritu: en su primera pasada sobre el corpus real, el linter
 reportó dos problemas... que eran **fallos del propio linter** (no entendía referencias
 legítimas entre repositorios y marcaba como rotos los enlaces citados como ejemplo dentro
 de código). Se corrigió el linter, no el corpus. La herramienta de vigilancia también se
-vigila — nada se da por bueno sin verificar, tampoco el verificador.
+vigila: nada se da por bueno sin comprobar, tampoco el verificador.
 
-Esto no es un framework ni pretende serlo. Son tres piezas pequeñas y un criterio.
-Cópialas, adáptalas a tu corpus, y sobre todo quédate con la pregunta que las origina:
-*¿quién vigila lo que tu agente recuerda?*
+Más que un framework, esto son tres piezas pequeñas y un criterio. Cópialas y adáptalas
+a tu corpus. Y quédate con la pregunta que las origina: *¿quién vigila lo que tu agente
+recuerda?*
 
 ## Relación con otros proyectos
 

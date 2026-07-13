@@ -32,7 +32,7 @@ guardado, cómo se detecta lo podrido, y qué entra y qué no. Esto es lo que co
 
 ## Las tres piezas
 
-### 1. El linter — fontanería ([lint_corpus.py](lint_corpus.py))
+### 1. El linter, fontanería ([lint_corpus.py](lint_corpus.py))
 
 Un script de Python sin dependencias que revisa la estructura del corpus: wikilinks
 `[[...]]` que no resuelven, punteros del índice a ficheros que no existen, notas huérfanas,
@@ -47,7 +47,7 @@ No juzga si el contenido es verdad, solo si la estructura se sostiene. Es delibe
 una comprobación barata que se puede ejecutar a diario encuentra la podredumbre de
 tipo 1 antes de que el agente tropiece con ella.
 
-### 2. El log automático — rastro ([hooks/log_memoria.ps1](hooks/log_memoria.ps1))
+### 2. El log automático, rastro ([hooks/log_memoria.ps1](hooks/log_memoria.ps1))
 
 Un hook de Claude Code (PostToolUse) que añade una línea a un `log.md` append-only cada
 vez que el agente crea o modifica una nota. Fecha, operación, fichero, descripción.
@@ -57,7 +57,7 @@ del humano ni del agente: se dispara solo en cada escritura. Cuando algo aparece
 la memoria, el log te dice cuándo entró y qué decía. Sin rastro, una nota corrupta es un
 misterio; con rastro, es un diff.
 
-### 3. Las citas — origen ([docs/convencion_citations.md](docs/convencion_citations.md))
+### 3. Las citas, origen ([docs/convencion_citations.md](docs/convencion_citations.md))
 
 Una convención: cada nota termina diciendo **quién la verificó, contra qué fuente, y si
 la comprobación se puede re-ejecutar hoy**. Una nota re-ejecutable se defiende sola; una
@@ -75,7 +75,7 @@ consistente hace falta algo más caro: **verificar la afirmación contra la fuen
 de su dominio**, es decir, ejecutar la consulta o lanzar el test de nuevo. Eso es la
 cuarta pieza. Y la cuarta pieza está congelada a propósito.
 
-## La cuarta pieza — y por qué está congelada
+## La cuarta pieza, y por qué está congelada
 
 El diseño existe: un **árbitro de admisión** con interfaz genérica
 (`dominio + afirmación + evidencia → ADMITIR / RECHAZAR / ADMITIR_DEGRADADO + razón`),
@@ -114,10 +114,14 @@ recuerda?*
 
 ## Relación con otros proyectos
 
-- [llm-eval-contable](https://github.com/jleonceo/llm-eval-contable) — la misma filosofía
-  (medir antes de confiar) aplicada a una skill: qué es una skill y cómo se examina.
-- [accounting-agent-swarm](https://github.com/jleonceo/accounting-agent-swarm) — el
-  sistema cuyo conocimiento gobierna este harness: 19 simulaciones medidas y las caídas explicadas.
+Este harness es una pieza de un trabajo más amplio sobre sistemas con varios agentes. Las piezas hermanas:
+
+- [llm-eval-contable](https://github.com/jleonceo/llm-eval-contable): la misma filosofía (medir antes de confiar) aplicada a una skill, qué es y cómo se examina.
+- [accounting-agent-swarm](https://github.com/jleonceo/accounting-agent-swarm): el sistema cuyo conocimiento gobierna este harness, con sus caídas explicadas.
+- [gobernanza-skills-analiticas](https://github.com/jleonceo/gobernanza-skills-analiticas): las cinco reglas para gobernar skills, cada una con su cicatriz real.
+- [orquestacion-enjambres-ia](https://github.com/jleonceo/orquestacion-enjambres-ia): el enrutado multi-agente, a qué agente va cada petición sin romper al crecer.
+- [verificacion-determinista-ia](https://github.com/jleonceo/verificacion-determinista-ia): la coherencia del estado comprobada por pura aritmética, sin IA.
+- [tu-primer-asistente-ia-web](https://github.com/jleonceo/tu-primer-asistente-ia-web): qué es un asistente de IA, para quien empieza de cero.
 
 ---
 

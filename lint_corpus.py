@@ -17,7 +17,7 @@ Supuestos del corpus (el formato de memoria de Claude Code, adaptable):
   - hay un indice (MEMORY.md) con punteros markdown a las notas
   - (opcional) las skills declaran sus RAGs bajo un encabezado "RAG QUE DEBES CARGAR"
 
-Sin dependencias externas. Solo lectura.
+Sin dependencias externas. Solo lee el corpus; escribe su informe en ./lint_corpus_informe.md.
 """
 import argparse, re, sys
 from pathlib import Path

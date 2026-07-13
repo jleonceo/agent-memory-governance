@@ -43,7 +43,8 @@ sensible a quedarse obsoleto).
 python lint_corpus.py --memory <dir_de_notas> [--rag <dir>] [--skills <dir>]
 ```
 
-No juzga si el contenido es verdad, solo si la estructura se sostiene. Es deliberado:
+Escribe además un informe en `lint_corpus_informe.md` en el directorio actual. No juzga si
+el contenido es verdad, solo si la estructura se sostiene. Es deliberado:
 una comprobación barata que se puede ejecutar a diario encuentra la podredumbre de
 tipo 1 antes de que el agente tropiece con ella.
 
@@ -53,8 +54,9 @@ Un hook de Claude Code (PostToolUse) que añade una línea a un `log.md` append-
 vez que el agente crea o modifica una nota. Fecha, operación, fichero, descripción.
 
 El formato importa poco. Lo que vale es que **no depende de la disciplina de nadie**, ni
-del humano ni del agente: se dispara solo en cada escritura. Cuando algo aparece mal en
-la memoria, el log te dice cuándo entró y qué decía. Sin rastro, una nota corrupta es un
+del humano ni del agente: se dispara solo, en cada escritura del agente con sus herramientas
+Write y Edit (una edición hecha a mano fuera del agente no queda registrada). Cuando algo
+aparece mal en la memoria, el log te dice cuándo entró y qué decía. Sin rastro, una nota corrupta es un
 misterio; con rastro, es un diff.
 
 ### 3. Las citas, origen ([docs/convencion_citations.md](docs/convencion_citations.md))
@@ -127,4 +129,4 @@ Este harness es una pieza de un trabajo más amplio sobre sistemas con varios ag
 
 ---
 
-Construido por [Juan Luis León Rodríguez](https://juanluisleon.vercel.app) · junio 2026
+Construido por [Juan Luis León Rodríguez](https://juanluisleon.vercel.app) · junio 2026 · Licencia [MIT](LICENSE)

@@ -28,7 +28,7 @@ o agente) puede hacer dos cosas que sin ella son imposibles:
 ```markdown
 ---
 name: descuadre-conocido-redondeo
-description: 78 asientos con descuadre de -0,01 € por redondeo — esperado, no es bug
+description: 78 asientos con descuadre de -0,01 € por redondeo: esperado, no es bug
 metadata:
   type: project
 ---

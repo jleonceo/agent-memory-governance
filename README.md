@@ -122,6 +122,7 @@ recuerda?*
 
 Este harness es una pieza de un trabajo más amplio sobre sistemas con varios agentes. Las piezas hermanas:
 
+- [claude-code-context-management](https://github.com/jleonceo/claude-code-context-management): la hermana directa de este repo. Aquí se gobierna *qué* recuerda el agente; allí, *cuánto* de eso se carga cada sesión, para que los ficheros de contexto (CLAUDE.md y MEMORY.md) no saturen el contexto.
 - [llm-eval-contable](https://github.com/jleonceo/llm-eval-contable): la misma filosofía (medir antes de confiar) aplicada a una skill, qué es y cómo se examina.
 - [accounting-agent-swarm](https://github.com/jleonceo/accounting-agent-swarm): el sistema cuyo conocimiento gobierna este harness, con sus caídas explicadas.
 - [gobernanza-skills-analiticas](https://github.com/jleonceo/gobernanza-skills-analiticas): las cinco reglas para gobernar skills, cada una con su cicatriz real.
@@ -246,6 +247,7 @@ your corpus. And keep the question that gives rise to them: *who watches what yo
 
 This harness is one piece of a larger body of work on multi-agent systems. The sibling pieces:
 
+- [claude-code-context-management](https://github.com/jleonceo/claude-code-context-management): the direct sibling of this repo. Here we govern *what* the agent remembers; there, *how much* of it loads each session, so the context files (CLAUDE.md and MEMORY.md) do not bloat the context.
 - [llm-eval-contable](https://github.com/jleonceo/llm-eval-contable): the same philosophy (measure before you trust) applied to a skill, what it is and how it is examined.
 - [accounting-agent-swarm](https://github.com/jleonceo/accounting-agent-swarm): the system whose knowledge this harness governs, with its drops explained.
 - [gobernanza-skills-analiticas](https://github.com/jleonceo/gobernanza-skills-analiticas): the five rules for governing skills, each with its real scar.

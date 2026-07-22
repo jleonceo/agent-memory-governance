@@ -10,14 +10,14 @@ Tres piezas pequeñas para que la memoria persistente de un agente de IA no se c
 en un vertedero. Salen de un sistema en uso real: unas 100 notas acumuladas en dos meses
 de trabajo diario con Claude Code.
 
-### El problema, explicado desde cero
+### El problema explicado desde cero
 
 Si trabajas a diario con un agente de IA, tarde o temprano querrás que **recuerde**: las
 decisiones que tomasteis, los errores que ya cometió una vez, las reglas de tu proyecto.
 La forma habitual de conseguirlo es darle memoria persistente: ficheros de texto que el
 agente lee al arrancar y va escribiendo mientras trabaja.
 
-Guardar es la parte fácil. Lo que casi nadie cuenta es que **esa memoria se pudre**, y se
+Guardar es la parte fácil. Lo que casi nadie cuenta es que **esa memoria se pudre**. Y se
 pudre de tres formas distintas:
 
 1. **Fontanería rota.** Notas que enlazan a notas que ya no existen, notas huérfanas que
@@ -36,7 +36,7 @@ guardado, cómo se detecta lo podrido, y qué entra y qué no. Esto es lo que co
 
 ### Las tres piezas
 
-#### 1. El linter, fontanería ([lint_corpus.py](lint_corpus.py))
+#### 1. El linter de fontanería ([lint_corpus.py](lint_corpus.py))
 
 Un script de Python sin dependencias que revisa la estructura del corpus: wikilinks
 `[[...]]` que no resuelven, punteros del índice a ficheros que no existen, notas huérfanas,
@@ -52,7 +52,7 @@ el contenido es verdad, solo si la estructura se sostiene. Es deliberado:
 una comprobación barata que se puede ejecutar a diario encuentra la podredumbre de
 tipo 1 antes de que el agente tropiece con ella.
 
-#### 2. El log automático, rastro ([hooks/log_memoria.ps1](hooks/log_memoria.ps1))
+#### 2. El rastro del log automático ([hooks/log_memoria.ps1](hooks/log_memoria.ps1))
 
 Un hook de Claude Code (PostToolUse) que añade una línea a un `log.md` append-only cada
 vez que el agente crea o modifica una nota. Fecha, operación, fichero, descripción.
@@ -63,7 +63,7 @@ Write y Edit (una edición hecha a mano fuera del agente no queda registrada). C
 aparece mal en la memoria, el log te dice cuándo entró y qué decía. Sin rastro, una nota corrupta es un
 misterio; con rastro, es un diff.
 
-#### 3. Las citas, origen ([docs/convencion_citations.md](docs/convencion_citations.md))
+#### 3. Las citas de origen ([docs/convencion_citations.md](docs/convencion_citations.md))
 
 Una convención: cada nota termina diciendo **quién la verificó, contra qué fuente, y si
 la comprobación se puede re-ejecutar hoy**. Una nota re-ejecutable se defiende sola; una
@@ -81,7 +81,7 @@ consistente hace falta algo más caro: **verificar la afirmación contra la fuen
 de su dominio**, es decir, ejecutar la consulta o lanzar el test de nuevo. Eso es la
 cuarta pieza. Y la cuarta pieza está congelada a propósito.
 
-### La cuarta pieza, y por qué está congelada
+### Por qué la cuarta pieza está congelada
 
 El diseño existe: un **árbitro de admisión** con interfaz genérica
 (`dominio + afirmación + evidencia → ADMITIR / RECHAZAR / ADMITIR_DEGRADADO + razón`),
@@ -140,14 +140,14 @@ Three small pieces to keep an AI agent's persistent memory from turning into a j
 They come from a system in real use: around 100 notes accumulated over two months of daily
 work with Claude Code.
 
-### The problem, from scratch
+### The problem from scratch
 
 If you work daily with an AI agent, sooner or later you will want it to **remember**: the
 decisions you made together, the mistakes it already made once, your project's rules. The
 usual way to get that is to give it persistent memory: text files the agent reads on startup
 and writes to as it works.
 
-Saving is the easy part. What almost nobody tells you is that **that memory rots**, and it
+Saving is the easy part. What almost nobody tells you is that **that memory rots**. And it
 rots in three different ways:
 
 1. **Broken plumbing.** Notes that link to notes that no longer exist, orphan notes that
@@ -166,7 +166,7 @@ what gets in and what does not. That is what I built.
 
 ### The three pieces
 
-#### 1. The linter, plumbing ([lint_corpus.py](lint_corpus.py))
+#### 1. The plumbing linter ([lint_corpus.py](lint_corpus.py))
 
 A dependency-free Python script that checks the corpus structure: `[[...]]` wikilinks that do
 not resolve, index pointers to files that do not exist, orphan notes, skill references to
@@ -180,7 +180,7 @@ It also writes a report to `lint_corpus_informe.md` in the current directory. It
 whether the content is true, only whether the structure holds. That is deliberate: a cheap
 check you can run daily finds type-1 rot before the agent trips over it.
 
-#### 2. The automatic log, trail ([hooks/log_memoria.ps1](hooks/log_memoria.ps1))
+#### 2. The trail from the automatic log ([hooks/log_memoria.ps1](hooks/log_memoria.ps1))
 
 A Claude Code hook (PostToolUse) that appends a line to an append-only `log.md` every time the
 agent creates or modifies a note. Date, operation, file, description.
@@ -191,7 +191,7 @@ its Write and Edit tools (an edit made by hand outside the agent is not logged).
 looks wrong in memory, the log tells you when it entered and what it said. Without a trail, a
 corrupt note is a mystery; with a trail, it is a diff.
 
-#### 3. The citations, origin ([docs/convencion_citations.md](docs/convencion_citations.md))
+#### 3. The origin citations ([docs/convencion_citations.md](docs/convencion_citations.md))
 
 A convention: each note ends by saying **who verified it, against what source, and whether the
 check can be re-run today**. A re-runnable note defends itself; one without a source depends on
@@ -207,7 +207,7 @@ type-3 flagged but unsolved. To catch a consistent falsehood you need something 
 **verify the claim against the primary source of its domain**, that is, run the query or launch
 the test again. That is the fourth piece. And the fourth piece is frozen on purpose.
 
-### The fourth piece, and why it is frozen
+### Why the fourth piece is frozen
 
 The design exists: an **admission arbiter** with a generic interface
 (`domain + claim + evidence -> ADMIT / REJECT / ADMIT_DEGRADED + reason`), pluggable by domain.

@@ -109,11 +109,11 @@ de que el método manual (verificar al usar, no al guardar) no basta.
 
 Del proyecto TechAcces: una empresa ficticia con contabilidad de verdad, sobre la que
 desarrollo enjambres de agentes Claude con evaluación continua. El diario operativo lleva
-17.382 asientos a 31/07/2026, contados con una consulta a la base. Esa cifra no se puede
-rehacer desde este repositorio. La base es privada y aquí no viaja. Va como contexto de
-dónde salió el problema. No es un resultado que puedas comprobar. Dos meses de sesiones
-diarias generan mucha memoria. Los problemas de arriba no son hipotéticos: los tres tipos
-de podredumbre aparecieron de verdad.
+17.382 asientos a 31/07/2026, contados con una consulta a un disco privado. Esa cifra
+**no es reproducible** desde este repositorio. Va como contexto de dónde salió el problema
+y no como resultado que puedas comprobar. Dos meses de sesiones diarias generan mucha
+memoria. Los problemas de arriba no son hipotéticos: los tres tipos de podredumbre
+aparecieron de verdad.
 
 Una anécdota que resume el espíritu: en su primera pasada sobre el corpus real, el linter
 reportó dos problemas... que eran **fallos del propio linter** (no entendía referencias

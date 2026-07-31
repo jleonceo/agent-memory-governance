@@ -14,11 +14,11 @@ de trabajo diario con Claude Code.
 
 Si trabajas a diario con un agente de IA, tarde o temprano querrás que **recuerde**: las
 decisiones que tomasteis, los errores que ya cometió una vez, las reglas de tu proyecto.
-La forma habitual de conseguirlo es darle memoria persistente: ficheros de texto que el
-agente lee al arrancar y va escribiendo mientras trabaja.
+La forma habitual de conseguirlo es darle memoria persistente, o sea ficheros de texto que
+el agente lee al arrancar y va escribiendo mientras trabaja. Guardar es la parte fácil, y
+es la que cuenta todo el mundo. Lo que casi nadie cuenta es que **esa memoria se pudre**.
 
-Guardar es la parte fácil. Lo que casi nadie cuenta es que **esa memoria se pudre**. Y se
-pudre de tres formas distintas:
+Se pudre de tres formas distintas:
 
 1. **Fontanería rota.** Notas que enlazan a notas que ya no existen, notas huérfanas que
    nada referencia, índices que apuntan a ficheros borrados. El agente sigue el enlace y
@@ -32,7 +32,9 @@ pudre de tres formas distintas:
 
 El almacenamiento está resuelto: hay patrones públicos de sobra para *guardar* memoria
 de agente. Lo que no encontré en ningún sitio es la **gobernanza**: quién vigila lo
-guardado, cómo se detecta lo podrido, y qué entra y qué no. Esto es lo que construí.
+guardado, cómo se detecta lo podrido, y qué entra y qué no.
+
+Esto es lo que construí.
 
 ### Las tres piezas
 
@@ -60,8 +62,9 @@ vez que el agente crea o modifica una nota. Fecha, operación, fichero, descripc
 El formato importa poco. Lo que vale es que **no depende de la disciplina de nadie**, ni
 del humano ni del agente: se dispara solo, en cada escritura del agente con sus herramientas
 Write y Edit (una edición hecha a mano fuera del agente no queda registrada). Cuando algo
-aparece mal en la memoria, el log te dice cuándo entró y qué decía. Sin rastro, una nota corrupta es un
-misterio; con rastro, es un diff.
+aparece mal en la memoria, el log te dice cuándo entró y qué decía.
+
+Sin rastro, una nota corrupta es un misterio; con rastro, es un diff.
 
 #### 3. Las citas de origen ([docs/convencion_citations.md](docs/convencion_citations.md))
 
@@ -71,15 +74,16 @@ sin fuente depende de la fe. El documento explica el formato y el porqué, con e
 
 ### Lo que estas piezas NO cazan (y conviene decirlo claro)
 
-El lint caza la inconsistencia, pero no la **falsedad consistente**: una mentira bien
-formateada pasa el lint, queda registrada con su fecha y hasta puede llevar un bloque
-de citas impecable.
-
-Las tres piezas resuelven la podredumbre de tipo 1, acotan la de tipo 2 (marcas STALE +
-citas con fecha) y dejan la de tipo 3 señalada pero no resuelta. Para cazar una falsedad
+El lint caza la inconsistencia. La **falsedad consistente** se le escapa entera: una
+mentira bien formateada pasa el lint, queda registrada con su fecha y hasta puede llevar
+un bloque de citas impecable. Así que conviene ser exacto con lo que cubren estas tres
+piezas. Resuelven la podredumbre de tipo 1, acotan la de tipo 2 con las marcas STALE y las
+citas fechadas, y dejan la de tipo 3 señalada y sin resolver. Para cazar una falsedad
 consistente hace falta algo más caro: **verificar la afirmación contra la fuente primaria
-de su dominio**, es decir, ejecutar la consulta o lanzar el test de nuevo. Eso es la
-cuarta pieza. Y la cuarta pieza está congelada a propósito.
+de su dominio**, o sea ejecutar la consulta o lanzar el test otra vez. Eso es la cuarta
+pieza.
+
+Y la cuarta pieza está congelada a propósito.
 
 ### Por qué la cuarta pieza está congelada
 
@@ -103,20 +107,22 @@ de que el método manual (verificar al usar, no al guardar) no basta.
 
 ### De dónde sale esto
 
-Del proyecto TechAcces: una empresa ficticia con contabilidad real (~17.000 líneas de
-diario en MySQL) sobre la que desarrollo enjambres de agentes Claude con evaluación
-continua. Dos meses de sesiones diarias generan mucha memoria, y los problemas de arriba
-no son hipotéticos: los tres tipos de podredumbre aparecieron de verdad.
+Del proyecto TechAcces: una empresa ficticia con contabilidad de verdad, sobre la que
+desarrollo enjambres de agentes Claude con evaluación continua. El diario operativo lleva
+17.382 asientos a 31/07/2026, contados con una consulta a la base. Esa cifra no se puede
+rehacer desde este repositorio. La base es privada y aquí no viaja. Va como contexto de
+dónde salió el problema. No es un resultado que puedas comprobar. Dos meses de sesiones
+diarias generan mucha memoria. Los problemas de arriba no son hipotéticos: los tres tipos
+de podredumbre aparecieron de verdad.
 
 Una anécdota que resume el espíritu: en su primera pasada sobre el corpus real, el linter
 reportó dos problemas... que eran **fallos del propio linter** (no entendía referencias
 legítimas entre repositorios y marcaba como rotos los enlaces citados como ejemplo dentro
 de código). Se corrigió el linter, no el corpus. La herramienta de vigilancia también se
-vigila: nada se da por bueno sin comprobar, tampoco el verificador.
+vigila: nada se da por bueno sin comprobar, tampoco el verificador. Más que un framework,
+esto son tres piezas pequeñas y un criterio, así que cópialas y adáptalas a tu corpus.
 
-Más que un framework, esto son tres piezas pequeñas y un criterio. Cópialas y adáptalas
-a tu corpus. Y quédate con la pregunta que las origina: *¿quién vigila lo que tu agente
-recuerda?*
+Y quédate con la pregunta que las origina: *¿quién vigila lo que tu agente recuerda?*
 
 ### Relación con otros proyectos
 
@@ -162,7 +168,9 @@ rots in three different ways:
 
 Storage is solved: there are plenty of public patterns to *save* agent memory. What I did not
 find anywhere is the **governance**: who watches what is stored, how the rot is detected, and
-what gets in and what does not. That is what I built.
+what gets in and what does not.
+
+That is what I built.
 
 ### The three pieces
 
@@ -188,8 +196,9 @@ agent creates or modifies a note. Date, operation, file, description.
 The format matters little. What counts is that it **does not depend on anyone's discipline**,
 neither the human's nor the agent's: it fires on its own, on every write the agent makes with
 its Write and Edit tools (an edit made by hand outside the agent is not logged). When something
-looks wrong in memory, the log tells you when it entered and what it said. Without a trail, a
-corrupt note is a mystery; with a trail, it is a diff.
+looks wrong in memory, the log tells you when it entered and what it said.
+
+Without a trail, a corrupt note is a mystery; with a trail, it is a diff.
 
 #### 3. The origin citations ([docs/convencion_citations.md](docs/convencion_citations.md))
 
@@ -200,12 +209,13 @@ faith. The document explains the format and the why, with a real example.
 ### What these pieces do NOT catch (and it is worth saying plainly)
 
 The lint catches inconsistency, but not **consistent falsehood**: a well-formatted lie passes
-the lint, gets logged with its date, and can even carry a flawless citations block.
-
-The three pieces solve type-1 rot, contain type-2 (STALE markers + dated citations) and leave
-type-3 flagged but unsolved. To catch a consistent falsehood you need something more expensive:
+the lint, gets logged with its date, and can even carry a flawless citations block. The three
+pieces solve type-1 rot, contain type-2 (STALE markers + dated citations) and leave type-3
+flagged but unsolved. To catch a consistent falsehood you need something more expensive:
 **verify the claim against the primary source of its domain**, that is, run the query or launch
-the test again. That is the fourth piece. And the fourth piece is frozen on purpose.
+the test again. That is the fourth piece.
+
+And the fourth piece is frozen on purpose.
 
 ### Why the fourth piece is frozen
 
@@ -238,10 +248,10 @@ An anecdote that captures the spirit: on its first pass over the real corpus, th
 two problems... that were **bugs in the linter itself** (it did not understand legitimate
 cross-repository references and marked as broken the links cited as examples inside code). The
 linter was fixed, not the corpus. The watchdog is watched too: nothing is taken as good without
-checking, not even the verifier.
+checking, not even the verifier. More than a framework, this is three small pieces and a
+criterion, so copy them and adapt them to your corpus.
 
-More than a framework, this is three small pieces and a criterion. Copy them and adapt them to
-your corpus. And keep the question that gives rise to them: *who watches what your agent remembers?*
+And keep the question that gives rise to them: *who watches what your agent remembers?*
 
 ### Related projects
 

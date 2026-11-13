@@ -41,7 +41,7 @@ flowchart TD
     M --> L[lint_corpus.py<br/>enlaces rotos, notas huérfanas y marcas STALE]
     M --> C[Citas de origen<br/>de dónde sale cada nota]
     L --> I[Informe de la estructura]
-    H --> D[Con rastro, una nota corrupta<br/>es un diff y no un misterio]
+    H --> D[Rastro de cambios<br/>una nota corrupta se localiza con un diff]
     style D fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
 ```
 

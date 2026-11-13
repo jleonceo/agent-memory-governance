@@ -41,7 +41,7 @@ flowchart TD
     M --> L[lint_corpus.py<br/>broken links, orphan notes and STALE marks]
     M --> C[Source citations<br/>where each note comes from]
     L --> I[Structure report]
-    H --> D[With a trail, a corrupt note<br/>is a diff, not a mystery]
+    H --> D[Change trail<br/>a corrupt note is located with a diff]
     style D fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
 ```
 

@@ -34,6 +34,18 @@ Esto es lo que construí.
 
 ## Las tres piezas
 
+```mermaid
+flowchart TD
+    A[El agente escribe o edita una nota] --> H[log_memoria.ps1<br/>anota cada escritura en log.md]
+    A --> M[Memoria del agente]
+    M --> L[lint_corpus.py<br/>enlaces rotos, notas huérfanas y marcas STALE]
+    M --> C[Citas de origen<br/>de dónde sale cada nota]
+    L --> I[Informe de la estructura]
+    H --> D[Con rastro, una nota corrupta<br/>es un diff y no un misterio]
+    style D fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+```
+
+
 ### 1. El linter de fontanería ([lint_corpus.py](lint_corpus.py))
 
 Un script de Python sin dependencias que revisa la estructura del corpus: wikilinks

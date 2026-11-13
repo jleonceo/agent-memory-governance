@@ -34,6 +34,18 @@ That is what I built.
 
 ## The three pieces
 
+```mermaid
+flowchart TD
+    A[The agent writes or edits a note] --> H[log_memoria.ps1<br/>logs every write in log.md]
+    A --> M[Agent memory]
+    M --> L[lint_corpus.py<br/>broken links, orphan notes and STALE marks]
+    M --> C[Source citations<br/>where each note comes from]
+    L --> I[Structure report]
+    H --> D[With a trail, a corrupt note<br/>is a diff, not a mystery]
+    style D fill:#e8f5e9,stroke:#2e7d32,color:#1b5e20
+```
+
+
 ### 1. The plumbing linter ([lint_corpus.py](lint_corpus.py))
 
 A dependency-free Python script that checks the corpus structure: `[[...]]` wikilinks that do
